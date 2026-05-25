@@ -152,21 +152,88 @@ label.lbl{font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.8px;ma
 .modal-overlay.show{display:flex;}
 .modal-box{background:#fff;border-radius:18px;padding:30px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.2);}
 .modal-title{font-size:18px;font-weight:800;color:var(--navy);margin-bottom:20px;}
+/* ── STATUS BADGES ── */
+.status-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;}
+.badge-green{background:#DCFCE7;color:#16A34A;}
+.badge-yellow{background:#FEF9C3;color:#D97706;}
+.badge-red{background:#FEE2E2;color:#DC2626;}
+.badge-blue{background:#DBEAFE;color:#1D4ED8;}
 /* ── CHANGE PASSWORD ── */
 .admin-actions-bar{display:flex;justify-content:flex-end;gap:10px;margin-bottom:20px;}
 /* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .broch-grid{grid-template-columns:1fr 1fr;}
+  .form-panel{width:320px;}
+}
 @media(max-width:768px){
-  .sidebar{width:60px;padding:16px 8px;}
-  .sidebar-brand .sbn,.sidebar-brand .sbs,.nav-btn span:last-child{display:none;}
-  .sidebar-brand{justify-content:center;}
-  .nav-btn{justify-content:center;padding:12px;}
-  .stats-grid{grid-template-columns:1fr 1fr;}
-  .broch-grid{grid-template-columns:1fr;}
-  .info-grid3{grid-template-columns:1fr;}
+  /* Sidebar becomes fixed bottom nav */
+  #adminScreen{flex-direction:column;}
+  .sidebar{
+    width:100%;height:58px;flex-direction:row;
+    padding:0 4px;align-items:center;
+    position:fixed;bottom:0;left:0;right:0;z-index:200;
+    box-shadow:0 -2px 16px #1E3A8A44;
+    justify-content:space-around;border-radius:0;
+  }
+  .sidebar-brand{display:none!important;}
+  .nav-btn{
+    flex-direction:column;gap:1px;padding:5px 0;
+    font-size:9px;border-radius:8px;margin-bottom:0;
+    flex:1;justify-content:center;align-items:center;min-width:0;
+  }
+  .nav-btn .icon{font-size:22px;}
+  .nav-btn span:last-child{font-size:9px;font-weight:700;white-space:nowrap;}
+  .sidebar-footer{display:none;}
+  .main-content{
+    padding:14px 12px 74px 12px;
+    overflow:auto;width:100%;
+  }
+  /* Stats */
+  .stats-grid{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .stat-card{padding:14px 10px;}
+  .stat-val{font-size:18px;}
+  .stat-icon{width:38px;height:38px;font-size:15px;}
+  /* Form panel: slide-up overlay */
+  .form-panel{
+    width:100%!important;
+    position:fixed!important;
+    bottom:58px;left:0;right:0;top:auto;
+    max-height:82vh;
+    border-radius:20px 20px 0 0;
+    z-index:199;
+    box-shadow:0 -8px 40px #1E3A8A33;
+    padding:20px 16px 16px;
+    overflow-y:auto;
+  }
+  .form-row{flex-direction:column;gap:8px;margin-bottom:0;}
+  /* Brochures */
+  .broch-grid{grid-template-columns:1fr;gap:12px;}
+  /* Customer cards */
+  .cust-card{padding:14px;}
+  .detail-grid{grid-template-columns:1fr 1fr;}
+  /* Portal */
+  .portal-main{padding:14px 12px 24px 12px;}
+  .info-grid3{grid-template-columns:1fr 1fr;gap:10px;}
+  .info-grid2{grid-template-columns:1fr 1fr;gap:10px;}
   .info-assets-grid{grid-template-columns:1fr;}
-  .form-panel{width:100%;position:relative;}
-  .main-content{padding:16px;}
-  .portal-main{padding:16px;}
+  .wc-name{font-size:20px;}
+  .wc-net{font-size:28px;}
+  .portal-header{padding:0 14px;}
+  .tab-nav button{padding:10px 12px;font-size:13px;}
+  /* Login */
+  .login-box{padding:28px 18px;margin:12px;}
+  /* Tables */
+  .tbl{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  /* Admin actions */
+  .admin-actions-bar{flex-wrap:wrap;gap:8px;}
+}
+@media(max-width:390px){
+  .info-grid3{grid-template-columns:1fr;}
+  .info-grid2{grid-template-columns:1fr;}
+  .stat-val{font-size:15px;}
+  .nav-btn span:last-child{display:none;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
 }
 </style>
 </head>
@@ -227,6 +294,8 @@ label.lbl{font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.8px;ma
     <button class="nav-btn" onclick="adminNav('customers')" id="nav-customers"><span class="icon">👥</span><span>Customers</span></button>
     <button class="nav-btn" onclick="adminNav('brochures')" id="nav-brochures"><span class="icon">📋</span><span>Brochures</span></button>
     <button class="nav-btn" onclick="adminNav('investments')" id="nav-investments"><span class="icon">💹</span><span>Investments</span></button>
+    <button class="nav-btn" onclick="adminNav('cashflow')" id="nav-cashflow"><span class="icon">💵</span><span>Cash Flow</span></button>
+    <button class="nav-btn" onclick="adminNav('reports')" id="nav-reports"><span class="icon">📊</span><span>Reports</span></button>
     <button class="nav-btn" onclick="adminNav('settings')" id="nav-settings"><span class="icon">⚙️</span><span>Settings</span></button>
     <div class="sidebar-footer">
       <button class="btn btn-out w100" style="background:transparent;color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2);" onclick="logout()">⇠ Logout</button>
@@ -277,12 +346,38 @@ const DB = {
     if(!this.get('admin')) this.set('admin',{username:'admin',password:'admin123'});
     if(!this.get('smsconfig')) this.set('smsconfig',{provider:'fast2sms',apikey:'',senderid:'JCCLPT'});
     if(!this.get('customers')) this.set('customers',[
-      {id:1,accountNumber:'ACC-2024-001',depositAccountNumber:'DEP-2024-001',name:'Rajesh Kumar',mobile:'9876543210',investmentAmount:500000,lockingPeriod:'24 months',maturedPeriod:'2026-06-01',assets:[{label:'Fixed Deposit',value:500000},{label:'Bonus Accrued',value:35000}]},
-      {id:2,accountNumber:'ACC-2024-002',depositAccountNumber:'DEP-2024-002',name:'Priya Sharma',mobile:'9123456780',investmentAmount:250000,lockingPeriod:'12 months',maturedPeriod:'2025-12-01',assets:[{label:'Fixed Deposit',value:250000},{label:'Interest Earned',value:22500}]}
+      {id:1,accountNumber:'ACC-2024-001',depositAccountNumber:'DEP-2024-001',name:'Rajesh Kumar',mobile:'9876543210',pan:'ABCDE1234F',aadhar:'123456789012',address:{line1:'12 Main Street',city:'Pune',state:'Maharashtra',pin:'411001',country:'India'},nominee:{name:'Sunita Kumar',relation:'Spouse',mobile:'9876543211'},investmentDate:'2024-01-15',investmentAmount:500000,profitRatio:12,lockingPeriod:'24 months',maturedPeriod:'2026-01-15',assets:[{label:'Fixed Deposit',value:500000},{label:'Bonus Accrued',value:35000}]}
     ]);
     if(!this.get('brochures')) this.set('brochures',[
       {id:1,scheme:'Gold Saver Plan',duration:'24 months',interestRate:'12% p.a.',minAmount:'₹1,00,000',profitDeclaration:'Interest paid quarterly. Bonus of 2% on maturity.',description:'Ideal for long-term wealth building with guaranteed returns.',tag:'Popular',image:null},
       {id:2,scheme:'Silver Growth Plan',duration:'12 months',interestRate:'9% p.a.',minAmount:'₹50,000',profitDeclaration:'Monthly interest payout. No penalty after 6 months.',description:'Short-term plan with flexible payout options.',tag:'Flexible',image:null}
+    ]);
+    if(!this.get('sales')) this.set('sales',[
+      {id:1,date:'2024-01-10',plotNo:'P-101',buyer:'Rajesh Kumar',area:2400,unit:'sqft',ratePerUnit:1200,total:2880000,status:'Completed',notes:'Corner plot'},
+      {id:2,date:'2024-02-15',plotNo:'P-202',buyer:'Priya Sharma',area:1.5,unit:'acres',ratePerUnit:1500000,total:2250000,status:'Completed',notes:''},
+      {id:3,date:'2024-03-20',plotNo:'P-305',buyer:'Suresh Patel',area:3,unit:'cent',ratePerUnit:45000,total:135000,status:'Pending',notes:'Near road'}
+    ]);
+    if(!this.get('purchases')) this.set('purchases',[
+      {id:1,date:'2024-01-05',type:'Land',description:'Agricultural land at Pune',seller:'Farmer Trust',area:5,unit:'acres',amount:7500000,status:'Completed',notes:''},
+      {id:2,date:'2024-02-20',type:'Flat',description:'2BHK flat in Mumbai',seller:'Builder Corp',area:950,unit:'sqft',amount:4500000,status:'Completed',notes:''},
+      {id:3,date:'2024-03-12',type:'Building',description:'Commercial building Nagpur',seller:'XYZ Realty',area:8000,unit:'sqft',amount:12000000,status:'Pending',notes:'Negotiation ongoing'}
+    ]);
+    if(!this.get('charges')) this.set('charges',[
+      {id:1,date:'2024-01-20',type:'Writer Charges',description:'Plot P-101 registration writing',amount:5000,paidTo:'Notary Office',plotRef:'P-101',status:'Paid'},
+      {id:2,date:'2024-02-10',type:'Registration Charges',description:'Land registration stamp duty',amount:45000,paidTo:'Sub-Registrar Office',plotRef:'P-202',status:'Paid'},
+      {id:3,date:'2024-03-05',type:'Maintenance Charges',description:'Plot boundary maintenance',amount:8000,paidTo:'Maintenance Team',plotRef:'P-305',status:'Paid'},
+      {id:4,date:'2024-03-18',type:'Legal Charges',description:'Agreement drafting fees',amount:12000,paidTo:'Legal Firm',plotRef:'P-101',status:'Pending'}
+    ]);
+    if(!this.get('cashflow')) this.set('cashflow',[
+      {id:1,date:'2024-01-15',type:'Cash In',subtype:'Customer Investment',description:'Investment received from Rajesh Kumar',amount:500000,bank:'',cashInHand:0,denomination:{2000:5,500:200,200:50,100:50,50:0,20:0,10:0,5:0,2:0,1:0}},
+      {id:2,date:'2024-01-20',type:'Bank Receipt',subtype:'Plot Sale',description:'Plot P-101 sale proceeds',amount:2880000,bank:'State Bank of India',cashInHand:0,denomination:{}},
+      {id:3,date:'2024-02-15',type:'Cash Out',subtype:'Purchase Payment',description:'Land purchase payment',amount:750000,bank:'',cashInHand:0,denomination:{2000:20,500:400,200:0,100:50,50:0,20:0,10:0,5:0,2:0,1:0}},
+      {id:4,date:'2024-03-01',type:'Bank Receipt',subtype:'Customer Investment',description:'Investment from Priya Sharma',amount:250000,bank:'HDFC Bank',cashInHand:0,denomination:{}}
+    ]);
+    if(!this.get('inventory')) this.set('inventory',[
+      {id:1,plotNo:'P-401',type:'Residential Plot',area:1800,unit:'sqft',location:'Sector 5, Pune',purchaseValue:1800000,currentValue:2200000,status:'Available'},
+      {id:2,plotNo:'P-402',type:'Commercial Plot',area:3200,unit:'sqft',location:'CBD, Mumbai',purchaseValue:4800000,currentValue:5500000,status:'Reserved'},
+      {id:3,plotNo:'B-101',type:'Flat',area:1200,unit:'sqft',location:'Andheri, Mumbai',purchaseValue:6000000,currentValue:7200000,status:'Available'}
     ]);
     if(!this.get('investments')) this.set('investments',[
       {id:1,title:'Stock Market Portfolio',investedAmount:200000,currentValue:245000,profitLoss:45000,date:'2024-01-15',notes:'Diversified equity portfolio'},
@@ -437,6 +532,8 @@ function adminNav(view){
   else if(view==='customers') main.innerHTML=renderCustomers();
   else if(view==='brochures') main.innerHTML=renderBrochures();
   else if(view==='investments') main.innerHTML=renderInvestments();
+  else if(view==='cashflow') main.innerHTML=renderCashFlow();
+  else if(view==='reports') main.innerHTML=renderReports();
   else if(view==='settings') main.innerHTML=renderSettings();
 }
 
@@ -507,19 +604,25 @@ function renderCustomers(){
   const filtered=customers.filter(c=>
     c.name.toLowerCase().includes(custSearch.toLowerCase())||
     c.accountNumber.includes(custSearch)||c.mobile.includes(custSearch));
-  return `
-  <div style="display:flex;gap:24px;align-items:flex-start;">
-    <div style="flex:1;min-width:0;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-        <h1 style="font-size:24px;font-weight:800;color:#1E3A8A;">Customers</h1>
-        <button class="btn btn-blue btn-sm" onclick="openCustForm()">+ Add Customer</button>
-      </div>
-      <input class="inp" placeholder="🔍 Search name, account, mobile…" value="${custSearch}" oninput="custSearch=this.value;adminNav('customers')" style="margin-bottom:16px;"/>
-      ${filtered.map(c=>renderCustCard(c)).join('')}
-      ${filtered.length===0?'<div style="text-align:center;color:#94A3B8;padding:48px;background:#fff;border-radius:14px;border:2px solid #DBEAFE;">No customers found.</div>':''}
-    </div>
-    <div id="custFormWrap">${custFormOpen?renderCustForm():'<div style="width:380px;"></div>'}</div>
-  </div>`;
+  const isMobile = window.innerWidth <= 768;
+  const formWrap = isMobile
+    ? '<div id="custFormWrap">' + (custFormOpen?renderCustForm():'') + '</div>'
+    : '<div id="custFormWrap">' + (custFormOpen?renderCustForm():'<div style="width:380px;"></div>') + '</div>';
+  const backdrop = (isMobile&&custFormOpen) ? '<div onclick="closeCustForm()" style="position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:198;"></div>' : '';
+  const noResult = filtered.length===0 ? '<div style="text-align:center;color:#94A3B8;padding:48px;background:#fff;border-radius:14px;border:2px solid #DBEAFE;">No customers found.</div>' : '';
+  return '<div style="display:flex;gap:24px;align-items:flex-start;position:relative;">'
+    + '<div style="flex:1;min-width:0;">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;">'
+    + '<h1 style="font-size:22px;font-weight:800;color:#1E3A8A;">Customers</h1>'
+    + '<button class="btn btn-blue btn-sm" onclick="openCustForm()">+ Add Customer</button>'
+    + '</div>'
+    + '<input class="inp" placeholder="Search name, account, mobile..." value="' + custSearch + '" oninput="custSearch=this.value;adminNav(&quot;customers&quot;)" style="margin-bottom:14px;"/>'
+    + filtered.map(c=>renderCustCard(c)).join('')
+    + noResult
+    + '</div>'
+    + formWrap
+    + '</div>'
+    + backdrop;
 }
 
 function renderCustCard(c){
@@ -536,11 +639,26 @@ function renderCustCard(c){
     </div>
     <div class="cust-detail">
       <div class="detail-grid">
-        <div class="detail-item"><div class="di-l">Deposit A/C</div><div class="di-v">${c.depositAccountNumber}</div></div>
-        <div class="detail-item"><div class="di-l">Locking Period</div><div class="di-v">${c.lockingPeriod}</div></div>
-        <div class="detail-item"><div class="di-l">Matured Period</div><div class="di-v">${c.maturedPeriod}</div></div>
-        <div class="detail-item"><div class="di-l">Mobile</div><div class="di-v">${c.mobile}</div></div>
+        <div class="detail-item"><div class="di-l">Deposit A/C</div><div class="di-v">${c.depositAccountNumber||'—'}</div></div>
+        <div class="detail-item"><div class="di-l">Investment Date</div><div class="di-v">${c.investmentDate||'—'}</div></div>
+        <div class="detail-item"><div class="di-l">Locking Period</div><div class="di-v">${c.lockingPeriod||'—'}</div></div>
+        <div class="detail-item"><div class="di-l">Matured Period</div><div class="di-v">${c.maturedPeriod||'—'}</div></div>
+        <div class="detail-item"><div class="di-l">Mobile</div><div class="di-v">${c.mobile||'—'}</div></div>
+        <div class="detail-item"><div class="di-l">Profit Ratio</div><div class="di-v" style="color:#16A34A;">${c.profitRatio?c.profitRatio+'%':'—'}</div></div>
+        <div class="detail-item"><div class="di-l">PAN Card</div><div class="di-v" style="letter-spacing:1px;">${c.pan||'—'}</div></div>
+        <div class="detail-item"><div class="di-l">Aadhaar</div><div class="di-v">${c.aadhar?c.aadhar.replace(/(\d{4})(\d{4})(\d{4})/,'$1 $2 $3'):'—'}</div></div>
       </div>
+      ${(c.address?.line1||c.address?.city)?`
+      <div style="background:#EFF6FF;border-radius:10px;padding:10px 13px;margin-bottom:10px;">
+        <div style="font-size:10px;font-weight:700;color:#94A3B8;letter-spacing:.5px;margin-bottom:4px;">📍 ADDRESS</div>
+        <div style="font-size:13px;font-weight:600;">${[c.address?.line1,c.address?.city,c.address?.state,c.address?.pin,c.address?.country].filter(Boolean).join(', ')}</div>
+      </div>`:''}
+      ${c.nominee?.name?`
+      <div style="background:#FFF7ED;border-radius:10px;padding:10px 13px;margin-bottom:10px;border:1px solid #FED7AA;">
+        <div style="font-size:10px;font-weight:700;color:#D97706;letter-spacing:.5px;margin-bottom:4px;">👥 NOMINEE</div>
+        <div style="font-size:13px;font-weight:700;">${c.nominee.name} <span style="font-weight:400;color:#64748B;">(${c.nominee.relation||'—'})</span></div>
+        ${c.nominee.mobile?`<div style="font-size:12px;color:#64748B;margin-top:2px;">📱 ${c.nominee.mobile}</div>`:''}
+      </div>`:''}
       <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:14px;">
         <div class="sec-tbl" style="background:#F0FDF4;border:1.5px solid #16A34A33;">
           <div class="sec-lbl" style="color:#16A34A;">ASSETS</div>
@@ -566,21 +684,58 @@ function toggleCust(id){
 function openCustForm(id=null){
   custFormOpen=true; editCustId=id;
   adminNav('customers');
-  setTimeout(()=>{ const w=document.getElementById('custFormWrap'); if(w) w.innerHTML=renderCustForm(); },10);
 }
 
 function renderCustForm(){
   const customers=DB.get('customers')||[];
   const c=editCustId?customers.find(x=>x.id===editCustId):null;
   const assets=c?c.assets:[{label:'',value:''}];
+  const sectionHdr=(icon,title,color='#1E3A8A')=>`<div style="display:flex;align-items:center;gap:7px;margin:6px 0 2px;border-bottom:2px solid #EFF6FF;padding-bottom:6px;"><span>${icon}</span><span style="font-size:12px;font-weight:800;color:${color};letter-spacing:.8px;text-transform:uppercase;">${title}</span></div>`;
   return `<div class="form-panel">
     <div class="form-title">${editCustId?'Edit Customer':'New Customer'}</div>
-    <div style="display:flex;flex-direction:column;gap:13px;">
-      ${[['cfName','Customer Name',c?.name||''],['cfAcc','Account Number',c?.accountNumber||''],['cfDep','Deposit A/C Number',c?.depositAccountNumber||''],['cfMob','Mobile Number',c?.mobile||''],['cfAmt','Investment Amount (₹)',c?.investmentAmount||''],['cfLock','Locking Period',c?.lockingPeriod||''],['cfMat','Matured Period (YYYY-MM-DD)',c?.maturedPeriod||'']].map(([id,lbl,val])=>`
-      <div><label class="lbl">${lbl}</label><input class="inp" id="${id}" value="${val}"/></div>`).join('')}
+    <div style="display:flex;flex-direction:column;gap:11px;">
+
+      ${sectionHdr('👤','Basic Info')}
+      <div><label class="lbl">Customer Name</label><input class="inp" id="cfName" value="${c?.name||''}"/></div>
+      <div><label class="lbl">Mobile Number</label><input class="inp" id="cfMob" value="${c?.mobile||''}" maxlength="10" placeholder="10-digit mobile"/></div>
+
+      ${sectionHdr('🪪','KYC Documents','#7C3AED')}
+      <div><label class="lbl">PAN Card Number</label><input class="inp" id="cfPan" value="${c?.pan||''}" maxlength="10" placeholder="ABCDE1234F" style="text-transform:uppercase;"/></div>
+      <div><label class="lbl">Aadhaar Card Number</label><input class="inp" id="cfAadhar" value="${c?.aadhar||''}" maxlength="12" placeholder="12-digit Aadhaar"/></div>
+
+      ${sectionHdr('🏠','Address Details','#0284C7')}
+      <div><label class="lbl">Street / House No.</label><input class="inp" id="cfAddr1" value="${c?.address?.line1||''}" placeholder="House / Flat / Street"/></div>
+      <div class="form-row">
+        <div style="flex:1;"><label class="lbl">City</label><input class="inp" id="cfCity" value="${c?.address?.city||''}" placeholder="City"/></div>
+        <div style="flex:1;"><label class="lbl">State</label><input class="inp" id="cfState" value="${c?.address?.state||''}" placeholder="State"/></div>
+      </div>
+      <div class="form-row">
+        <div style="flex:1;"><label class="lbl">PIN Code</label><input class="inp" id="cfPin" value="${c?.address?.pin||''}" maxlength="6" placeholder="6-digit PIN"/></div>
+        <div style="flex:1;"><label class="lbl">Country</label><input class="inp" id="cfCountry" value="${c?.address?.country||'India'}" placeholder="Country"/></div>
+      </div>
+
+      ${sectionHdr('👥','Nominee Details','#D97706')}
+      <div><label class="lbl">Nominee Name</label><input class="inp" id="cfNomName" value="${c?.nominee?.name||''}" placeholder="Full name"/></div>
+      <div class="form-row">
+        <div style="flex:1;"><label class="lbl">Relationship</label><input class="inp" id="cfNomRel" value="${c?.nominee?.relation||''}" placeholder="e.g. Spouse, Son"/></div>
+        <div style="flex:1;"><label class="lbl">Nominee Mobile</label><input class="inp" id="cfNomMob" value="${c?.nominee?.mobile||''}" maxlength="10" placeholder="Mobile"/></div>
+      </div>
+
+      ${sectionHdr('💰','Investment Details','#16A34A')}
+      <div><label class="lbl">Account Number</label><input class="inp" id="cfAcc" value="${c?.accountNumber||''}"/></div>
+      <div><label class="lbl">Deposit A/C Number</label><input class="inp" id="cfDep" value="${c?.depositAccountNumber||''}"/></div>
+      <div><label class="lbl">Investment Date</label><input class="inp" id="cfInvDate" type="date" value="${c?.investmentDate||''}"/></div>
+      <div><label class="lbl">Investment Amount (₹)</label><input class="inp" id="cfAmt" type="number" value="${c?.investmentAmount||''}" placeholder="Enter amount"/></div>
+      <div><label class="lbl">Profit Ratio (%)</label><input class="inp" id="cfProfit" type="number" step="0.01" value="${c?.profitRatio||''}" placeholder="e.g. 12.5"/></div>
+      <div class="form-row">
+        <div style="flex:1;"><label class="lbl">Locking Period</label><input class="inp" id="cfLock" value="${c?.lockingPeriod||''}" placeholder="e.g. 12 Months"/></div>
+        <div style="flex:1;"><label class="lbl">Matured Period</label><input class="inp" id="cfMat" type="date" value="${c?.maturedPeriod||''}"/></div>
+      </div>
+
+      ${sectionHdr('📊','Assets','#16A34A')}
       <div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <label class="lbl" style="color:#16A34A;">ASSETS</label>
+          <span style="font-size:12px;color:#475569;">Asset breakdown</span>
           <button class="btn btn-out btn-sm" onclick="addAssetRow()">+ Add</button>
         </div>
         <div id="assetRows">
@@ -591,8 +746,9 @@ function renderCustForm(){
           </div>`).join('')}
         </div>
       </div>
+
       <div style="display:flex;gap:10px;margin-top:4px;">
-        <button class="btn btn-blue" style="flex:1;" onclick="saveCust()">Save</button>
+        <button class="btn btn-blue" style="flex:1;" onclick="saveCust()">💾 Save</button>
         <button class="btn btn-out" style="flex:1;" onclick="closeCustForm()">Cancel</button>
       </div>
     </div>
@@ -615,6 +771,10 @@ function saveCust(){
   const name=document.getElementById('cfName').value.trim();
   const acc=document.getElementById('cfAcc').value.trim();
   if(!name||!acc){ alert('Name and Account Number required.'); return; }
+  const pan=document.getElementById('cfPan').value.trim().toUpperCase();
+  if(pan && !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan)){ alert('Invalid PAN format. Expected: ABCDE1234F'); return; }
+  const aadhar=document.getElementById('cfAadhar').value.trim();
+  if(aadhar && !/^\d{12}$/.test(aadhar)){ alert('Aadhaar must be exactly 12 digits.'); return; }
   const rows=document.querySelectorAll('#assetRows .form-row');
   const assets=[];
   rows.forEach(row=>{
@@ -625,13 +785,29 @@ function saveCust(){
   const customers=DB.get('customers')||[];
   const entry={
     id:editCustId||Date.now(),
-    accountNumber:acc,
-    depositAccountNumber:document.getElementById('cfDep').value.trim(),
     name,
     mobile:document.getElementById('cfMob').value.trim(),
+    pan,
+    aadhar,
+    address:{
+      line1:document.getElementById('cfAddr1').value.trim(),
+      city:document.getElementById('cfCity').value.trim(),
+      state:document.getElementById('cfState').value.trim(),
+      pin:document.getElementById('cfPin').value.trim(),
+      country:document.getElementById('cfCountry').value.trim()||'India'
+    },
+    nominee:{
+      name:document.getElementById('cfNomName').value.trim(),
+      relation:document.getElementById('cfNomRel').value.trim(),
+      mobile:document.getElementById('cfNomMob').value.trim()
+    },
+    accountNumber:acc,
+    depositAccountNumber:document.getElementById('cfDep').value.trim(),
+    investmentDate:document.getElementById('cfInvDate').value,
     investmentAmount:parseFloat(document.getElementById('cfAmt').value)||0,
+    profitRatio:parseFloat(document.getElementById('cfProfit').value)||0,
     lockingPeriod:document.getElementById('cfLock').value.trim(),
-    maturedPeriod:document.getElementById('cfMat').value.trim(),
+    maturedPeriod:document.getElementById('cfMat').value,
     assets
   };
   if(editCustId){ const idx=customers.findIndex(c=>c.id===editCustId); customers[idx]=entry; }
@@ -672,9 +848,11 @@ function renderBrochures(){
 }
 
 function renderBrochCard(b){
-  const imgHtml=b.image
-    ?`<div style="position:relative;"><img src="${b.image}" style="width:100%;height:180px;object-fit:cover;display:block;"/><div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,#1E3A8Aee);"></div><div style="position:absolute;bottom:14px;left:18px;font-size:18px;font-weight:800;color:#fff;">${b.scheme}</div>${b.tag?`<div class="broch-tag" style="position:absolute;top:12px;right:12px;">${b.tag}</div>`:''}</div>`
-    :`<div class="broch-banner"><div class="broch-banner-title">${b.scheme}</div>${b.tag?`<div class="broch-tag broch-tag-white">${b.tag}</div>`:''}</div>`;
+  const tagHtml = b.tag ? '<div class="broch-tag" style="position:absolute;top:12px;right:12px;">'+b.tag+'</div>' : '';
+  const tagHtmlW = b.tag ? '<div class="broch-tag broch-tag-white">'+b.tag+'</div>' : '';
+  const imgHtml = b.image
+    ? '<div style="position:relative;"><img src="'+b.image+'" style="width:100%;height:180px;object-fit:cover;display:block;"/><div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,#1E3A8Aee);"></div><div style="position:absolute;bottom:14px;left:18px;font-size:18px;font-weight:800;color:#fff;">'+b.scheme+'</div>'+tagHtml+'</div>'
+    : '<div class="broch-banner"><div class="broch-banner-title">'+b.scheme+'</div>'+tagHtmlW+'</div>';
   return `<div class="broch-card">
     ${imgHtml}
     <div class="broch-body">
@@ -1010,11 +1188,26 @@ function renderMyInv(c){
     </div>
     <div class="card" style="border-top:3px solid #0284C7;text-align:center;">
       <div style="color:#94A3B8;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px;">LOCKING PERIOD</div>
-      <div style="color:#0284C7;font-weight:800;font-size:20px;">${c.lockingPeriod}</div>
+      <div style="color:#0284C7;font-weight:800;font-size:20px;">${c.lockingPeriod||'—'}</div>
     </div>
     <div class="card" style="border-top:3px solid #7C3AED;text-align:center;">
       <div style="color:#94A3B8;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px;">MATURITY DATE</div>
-      <div style="color:#7C3AED;font-weight:800;font-size:18px;">${c.maturedPeriod}</div>
+      <div style="color:#7C3AED;font-weight:800;font-size:18px;">${c.maturedPeriod||'—'}</div>
+    </div>
+  </div>
+
+  <div class="info-grid3">
+    <div class="card" style="border-top:3px solid #16A34A;text-align:center;">
+      <div style="color:#94A3B8;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px;">INVESTMENT DATE</div>
+      <div style="color:#16A34A;font-weight:800;font-size:18px;">${c.investmentDate||'—'}</div>
+    </div>
+    <div class="card" style="border-top:3px solid #D97706;text-align:center;">
+      <div style="color:#94A3B8;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px;">PROFIT RATIO</div>
+      <div style="color:#D97706;font-weight:800;font-size:20px;">${c.profitRatio?c.profitRatio+'%':'—'}</div>
+    </div>
+    <div class="card" style="border-top:3px solid #7C3AED;text-align:center;">
+      <div style="color:#94A3B8;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px;">PAN CARD</div>
+      <div style="color:#7C3AED;font-weight:800;font-size:15px;letter-spacing:2px;">${c.pan||'—'}</div>
     </div>
   </div>
 
@@ -1025,9 +1218,34 @@ function renderMyInv(c){
     </div>
     <div class="card">
       <div style="color:#94A3B8;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:6px;">DEPOSIT ACCOUNT NO.</div>
-      <div style="color:#1D4ED8;font-weight:800;font-size:17px;">${c.depositAccountNumber}</div>
+      <div style="color:#1D4ED8;font-weight:800;font-size:17px;">${c.depositAccountNumber||'—'}</div>
     </div>
   </div>
+
+  ${(c.address?.line1||c.address?.city)?`
+  <div class="card" style="border-top:3px solid #0284C7;margin-bottom:18px;">
+    <div style="color:#0284C7;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px;">📍 ADDRESS</div>
+    <div style="font-size:15px;font-weight:600;">${[c.address?.line1,c.address?.city,c.address?.state,c.address?.pin,c.address?.country].filter(Boolean).join(', ')}</div>
+  </div>`:''}
+
+  ${c.nominee?.name?`
+  <div class="card" style="border-top:3px solid #D97706;margin-bottom:18px;">
+    <div style="color:#D97706;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px;">👥 NOMINEE DETAILS</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div style="background:#FFF7ED;border-radius:9px;padding:10px;border:1px solid #FED7AA;">
+        <div style="font-size:10px;font-weight:700;color:#D97706;margin-bottom:4px;">NAME</div>
+        <div style="font-size:14px;font-weight:700;">${c.nominee.name}</div>
+      </div>
+      <div style="background:#FFF7ED;border-radius:9px;padding:10px;border:1px solid #FED7AA;">
+        <div style="font-size:10px;font-weight:700;color:#D97706;margin-bottom:4px;">RELATIONSHIP</div>
+        <div style="font-size:14px;font-weight:700;">${c.nominee.relation||'—'}</div>
+      </div>
+      <div style="background:#FFF7ED;border-radius:9px;padding:10px;border:1px solid #FED7AA;">
+        <div style="font-size:10px;font-weight:700;color:#D97706;margin-bottom:4px;">MOBILE</div>
+        <div style="font-size:14px;font-weight:700;">${c.nominee.mobile||'—'}</div>
+      </div>
+    </div>
+  </div>`:''}
 
   <div class="card card-top-green">
     <div style="color:#16A34A;font-weight:700;font-size:13px;letter-spacing:1px;margin-bottom:14px;">▲ YOUR ASSETS</div>
@@ -1052,6 +1270,649 @@ function renderSchemes(){
     ${brochures.length===0?'<div style="color:#94A3B8;padding:48px;text-align:center;grid-column:1/-1;">No schemes available yet. Check back soon!</div>':''}
   </div>`;
 }
+
+// ════════════════════════════════════════════════════════
+// REPORTS
+// ════════════════════════════════════════════════════════
+let reportTab = 'customer';
+let saleForm=false, purchaseForm=false, inventoryForm=false;
+let editSaleId=null, editPurchaseId=null, editInventoryId=null;
+
+function renderReports(){
+  const tabs = [
+    {id:'customer',icon:'👤',label:'Customer'},
+    {id:'sales',icon:'🏷️',label:'Sales'},
+    {id:'purchase',icon:'🛒',label:'Purchase'},
+    {id:'inventory',icon:'📦',label:'Inventory'},
+    {id:'charges',icon:'🧾',label:'Charges'},
+    {id:'balance',icon:'⚖️',label:'Balance Sheet'},
+    {id:'pl',icon:'📈',label:'P&L'}
+  ];
+  const tabBar = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px;">'
+    + tabs.map(t=>'<button onclick="reportTab=\''+t.id+'\';document.getElementById(\'adminMain\').innerHTML=renderReports();" style="display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:10px;border:2px solid '+(reportTab===t.id?'#1D4ED8':'#DBEAFE')+';background:'+(reportTab===t.id?'#1D4ED8':'#fff')+';color:'+(reportTab===t.id?'#fff':'#475569')+';font-size:13px;font-weight:700;cursor:pointer;"><span>'+t.icon+'</span><span>'+t.label+'</span></button>').join('')
+    + '</div>';
+  let body = '';
+  if(reportTab==='customer') body = renderCustomerReport();
+  else if(reportTab==='sales') body = renderSalesReport();
+  else if(reportTab==='purchase') body = renderPurchaseReport();
+  else if(reportTab==='inventory') body = renderInventoryReport();
+  else if(reportTab==='charges') body = renderChargesReport();
+  else if(reportTab==='balance') body = renderBalanceSheet();
+  else if(reportTab==='pl') body = renderPLReport();
+  return '<h1 style="font-size:22px;font-weight:800;color:#1E3A8A;margin-bottom:16px;">📊 Reports</h1>' + tabBar + body;
+}
+
+/* ── CUSTOMER REPORT ── */
+function renderCustomerReport(){
+  const customers = DB.get('customers')||[];
+  const sales = DB.get('sales')||[];
+  const totalInvested = customers.reduce((s,c)=>s+(c.investmentAmount||0),0);
+  const custInvested = totalInvested;
+  const cards = '<div class="stats-grid" style="margin-bottom:20px;">'
+    + statCard('👥','Total Customers',customers.length,'#1D4ED8')
+    + statCard('💰','Total Invested',inr(totalInvested),'#16A34A')
+    + statCard('💰','Total Customer Investment',inr(custInvested),'#7C3AED')
+    + statCard('📊','Avg. Investment',customers.length?inr(Math.round(totalInvested/customers.length)):inr(0),'#D97706')
+    + '</div>';
+  const rows = customers.map(c=>{
+    const isMatured = c.maturedPeriod && new Date(c.maturedPeriod) < new Date();
+    return '<tr><td><b>'+c.name+'</b></td><td>'+c.accountNumber+'</td><td>'+c.mobile+'</td><td style="color:#16A34A;font-weight:700;">'+inr(c.investmentAmount||0)+'</td><td style="color:#7C3AED;font-weight:700;">'+(c.profitRatio?c.profitRatio+'%':'—')+'</td><td>'+formatDate(c.investmentDate)+'</td><td>'+formatDate(c.maturedPeriod)+'</td><td><span class="status-badge '+(isMatured?'badge-red':'badge-green')+'">'+(isMatured?'Matured':'Active')+'</span></td></tr>';
+  }).join('');
+  const tbl = '<div style="overflow-x:auto;"><table class="tbl" style="min-width:700px;"><thead><tr><th>Name</th><th>Account</th><th>Mobile</th><th>Invested</th><th>Bought From</th><th>Inv. Date</th><th>Maturity</th><th>Profit %</th></tr></thead><tbody>'+rows+(rows?'':'<tr><td colspan="8" style="text-align:center;color:#94A3B8;padding:40px;">No customers yet.</td></tr>')+'</tbody></table></div>';
+  return cards + reportCard('Customer Report Details', tbl);
+}
+
+/* ── SALES REPORT ── */
+function renderSalesReport(){
+  const sales = DB.get('sales')||[];
+  const total = sales.reduce((s,sl)=>s+sl.total,0);
+  const completed = sales.filter(s=>s.status==='Completed');
+  const pending = sales.filter(s=>s.status==='Pending');
+  const cards = '<div class="stats-grid" style="margin-bottom:20px;">'
+    + statCard('🏷️','Total Sales',sales.length,'#1D4ED8')
+    + statCard('💰','Total Revenue',inr(total),'#16A34A')
+    + statCard('✅','Completed',completed.length,'#16A34A')
+    + statCard('⏳','Pending',pending.length,'#D97706')
+    + '</div>';
+  const addBtn = '<button class="btn btn-blue btn-sm" style="margin-bottom:14px;" onclick="saleForm=true;editSaleId=null;document.getElementById(\'adminMain\').innerHTML=renderReports();">+ Add Sale</button>';
+  let formHtml = '';
+  if(saleForm) formHtml = renderSaleForm();
+  const rows = sales.map(s=>'<tr><td>'+formatDate(s.date)+'</td><td><b>'+s.plotNo+'</b></td><td>'+s.buyer+'</td><td>'+s.area+' '+s.unit+'</td><td>'+inr(s.ratePerUnit)+'/'+s.unit+'</td><td style="color:#16A34A;font-weight:700;">'+inr(s.total)+'</td><td><span class="status-badge '+(s.status==='Completed'?'badge-green':'badge-yellow')+'">'+s.status+'</span></td><td><button class="btn btn-out btn-sm" onclick="editSaleId='+s.id+';saleForm=true;document.getElementById(\'adminMain\').innerHTML=renderReports();">✎</button> <button class="btn btn-red" onclick="deleteSale('+s.id+')">✕</button></td></tr>').join('');
+  const tbl = '<div style="overflow-x:auto;"><table class="tbl" style="min-width:650px;"><thead><tr><th>Date</th><th>Plot No</th><th>Buyer</th><th>Area</th><th>Rate</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+rows+(rows?'':'<tr><td colspan="8" style="text-align:center;color:#94A3B8;padding:40px;">No sales yet.</td></tr>')+'</tbody></table></div>';
+  return cards + addBtn + (formHtml?formHtml+'<br/>':'') + reportCard('Sales Transactions', tbl);
+}
+
+function renderSaleForm(){
+  const sales = DB.get('sales')||[];
+  const s = editSaleId ? sales.find(x=>x.id===editSaleId) : null;
+  return '<div class="card" style="border-top:3px solid #1D4ED8;margin-bottom:14px;max-width:600px;">'
+    +'<div style="font-size:16px;font-weight:800;color:#1E3A8A;margin-bottom:16px;">'+(editSaleId?'Edit Sale':'New Sale Entry')+'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+    +'<div><label class="lbl">Date</label><input class="inp" id="sf_date" type="date" value="'+(s?s.date:'')+'"/></div>'
+    +'<div><label class="lbl">Plot No.</label><input class="inp" id="sf_plot" value="'+(s?s.plotNo:'')+'"/></div>'
+    +'<div><label class="lbl">Buyer Name</label><input class="inp" id="sf_buyer" value="'+(s?s.buyer:'')+'"/></div>'
+    +'<div><label class="lbl">Area</label><input class="inp" id="sf_area" type="number" value="'+(s?s.area:'')+'"/></div>'
+    +'<div><label class="lbl">Unit</label><select class="inp" id="sf_unit"><option '+(s&&s.unit==='sqft'?'selected':'')+' value="sqft">Square Feet (sqft)</option><option '+(s&&s.unit==='acres'?'selected':'')+' value="acres">Acres</option><option '+(s&&s.unit==='cent'?'selected':'')+' value="cent">Cent</option></select></div>'
+    +'<div><label class="lbl">Rate per Unit (₹)</label><input class="inp" id="sf_rate" type="number" value="'+(s?s.ratePerUnit:'')+'"/></div>'
+    +'<div><label class="lbl">Status</label><select class="inp" id="sf_status"><option '+(s&&s.status==='Completed'?'selected':'')+' value="Completed">Completed</option><option '+(s&&s.status==='Pending'?'selected':'')+' value="Pending">Pending</option><option '+(s&&s.status==='Cancelled'?'selected':'')+' value="Cancelled">Cancelled</option></select></div>'
+    +'<div><label class="lbl">Notes</label><input class="inp" id="sf_notes" value="'+(s?s.notes:'')+'"/></div>'
+    +'</div>'
+    +'<div style="display:flex;gap:10px;margin-top:14px;">'
+    +'<button class="btn btn-blue" onclick="saveSale()">💾 Save</button>'
+    +'<button class="btn btn-out" onclick="saleForm=false;editSaleId=null;document.getElementById(\'adminMain\').innerHTML=renderReports();">Cancel</button>'
+    +'</div></div>';
+}
+
+function saveSale(){
+  const sales = DB.get('sales')||[];
+  const area = parseFloat(document.getElementById('sf_area').value)||0;
+  const rate = parseFloat(document.getElementById('sf_rate').value)||0;
+  const entry = {
+    id: editSaleId||Date.now(),
+    date: document.getElementById('sf_date').value,
+    plotNo: document.getElementById('sf_plot').value.trim(),
+    buyer: document.getElementById('sf_buyer').value.trim(),
+    area: area, unit: document.getElementById('sf_unit').value,
+    ratePerUnit: rate, total: area*rate,
+    status: document.getElementById('sf_status').value,
+    notes: document.getElementById('sf_notes').value.trim()
+  };
+  if(editSaleId){ const idx=sales.findIndex(x=>x.id===editSaleId); sales[idx]=entry; }
+  else sales.push(entry);
+  DB.set('sales',sales);
+  saleForm=false; editSaleId=null;
+  document.getElementById('adminMain').innerHTML=renderReports();
+}
+
+function deleteSale(id){ if(confirm('Delete this sale?')){ const s=DB.get('sales')||[]; DB.set('sales',s.filter(x=>x.id!==id)); document.getElementById('adminMain').innerHTML=renderReports(); } }
+
+/* ── PURCHASE REPORT ── */
+function renderPurchaseReport(){
+  const purchases = DB.get('purchases')||[];
+  const total = purchases.reduce((s,p)=>s+p.amount,0);
+  const completed = purchases.filter(p=>p.status==='Completed');
+  const cards = '<div class="stats-grid" style="margin-bottom:20px;">'
+    + statCard('🛒','Total Purchases',purchases.length,'#7C3AED')
+    + statCard('💸','Total Spent',inr(total),'#DC2626')
+    + statCard('✅','Completed',completed.length,'#16A34A')
+    + statCard('⏳','Pending',purchases.length-completed.length,'#D97706')
+    + '</div>';
+  const addBtn = '<button class="btn btn-blue btn-sm" style="margin-bottom:14px;" onclick="purchaseForm=true;editPurchaseId=null;document.getElementById(\'adminMain\').innerHTML=renderReports();">+ Add Purchase</button>';
+  let formHtml = '';
+  if(purchaseForm) formHtml = renderPurchaseForm();
+  const rows = purchases.map(p=>'<tr><td>'+formatDate(p.date)+'</td><td><span style="background:#EDE9FE;color:#7C3AED;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;">'+p.type+'</span></td><td>'+p.description+'</td><td>'+p.seller+'</td><td>'+p.area+' '+p.unit+'</td><td style="color:#DC2626;font-weight:700;">'+inr(p.amount)+'</td><td><span class="status-badge '+(p.status==='Completed'?'badge-green':'badge-yellow')+'">'+p.status+'</span></td><td><button class="btn btn-out btn-sm" onclick="editPurchaseId='+p.id+';purchaseForm=true;document.getElementById(\'adminMain\').innerHTML=renderReports();">✎</button> <button class="btn btn-red" onclick="deletePurchase('+p.id+')">✕</button></td></tr>').join('');
+  const tbl = '<div style="overflow-x:auto;"><table class="tbl" style="min-width:700px;"><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Seller</th><th>Area</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+rows+(rows?'':'<tr><td colspan="8" style="text-align:center;color:#94A3B8;padding:40px;">No purchases yet.</td></tr>')+'</tbody></table></div>';
+  return cards + addBtn + (formHtml?formHtml+'<br/>':'') + reportCard('Purchase Transactions', tbl);
+}
+
+function renderPurchaseForm(){
+  const purchases = DB.get('purchases')||[];
+  const p = editPurchaseId ? purchases.find(x=>x.id===editPurchaseId) : null;
+  return '<div class="card" style="border-top:3px solid #7C3AED;margin-bottom:14px;max-width:600px;">'
+    +'<div style="font-size:16px;font-weight:800;color:#1E3A8A;margin-bottom:16px;">'+(editPurchaseId?'Edit Purchase':'New Purchase Entry')+'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+    +'<div><label class="lbl">Date</label><input class="inp" id="pf_date" type="date" value="'+(p?p.date:'')+'"/></div>'
+    +'<div><label class="lbl">Type</label><select class="inp" id="pf_type"><option '+(p&&p.type==='Land'?'selected':'')+' value="Land">Land</option><option '+(p&&p.type==='Plot'?'selected':'')+' value="Plot">Plot</option><option '+(p&&p.type==='Building'?'selected':'')+' value="Building">Building</option><option '+(p&&p.type==='Flat'?'selected':'')+' value="Flat">Flat</option><option '+(p&&p.type==='Commercial'?'selected':'')+' value="Commercial">Commercial</option><option '+(p&&p.type==='Villa'?'selected':'')+' value="Villa">Villa</option></select></div>'
+    +'<div style="grid-column:1/-1"><label class="lbl">Description</label><input class="inp" id="pf_desc" value="'+(p?p.description:'')+'"/></div>'
+    +'<div><label class="lbl">Seller Name</label><input class="inp" id="pf_seller" value="'+(p?p.seller:'')+'"/></div>'
+    +'<div><label class="lbl">Area</label><input class="inp" id="pf_area" type="number" value="'+(p?p.area:'')+'"/></div>'
+    +'<div><label class="lbl">Unit</label><select class="inp" id="pf_unit"><option '+(p&&p.unit==='sqft'?'selected':'')+' value="sqft">Square Feet</option><option '+(p&&p.unit==='acres'?'selected':'')+' value="acres">Acres</option><option '+(p&&p.unit==='cent'?'selected':'')+' value="cent">Cent</option></select></div>'
+    +'<div><label class="lbl">Amount (₹)</label><input class="inp" id="pf_amt" type="number" value="'+(p?p.amount:'')+'"/></div>'
+    +'<div><label class="lbl">Status</label><select class="inp" id="pf_status"><option '+(p&&p.status==='Completed'?'selected':'')+' value="Completed">Completed</option><option '+(p&&p.status==='Pending'?'selected':'')+' value="Pending">Pending</option><option '+(p&&p.status==='Cancelled'?'selected':'')+' value="Cancelled">Cancelled</option></select></div>'
+    +'<div style="grid-column:1/-1"><label class="lbl">Notes</label><input class="inp" id="pf_notes" value="'+(p?p.notes:'')+'"/></div>'
+    +'</div>'
+    +'<div style="display:flex;gap:10px;margin-top:14px;">'
+    +'<button class="btn btn-blue" onclick="savePurchase()">💾 Save</button>'
+    +'<button class="btn btn-out" onclick="purchaseForm=false;editPurchaseId=null;document.getElementById(\'adminMain\').innerHTML=renderReports();">Cancel</button>'
+    +'</div></div>';
+}
+
+function savePurchase(){
+  const purchases = DB.get('purchases')||[];
+  const entry = {
+    id: editPurchaseId||Date.now(),
+    date: document.getElementById('pf_date').value,
+    type: document.getElementById('pf_type').value,
+    description: document.getElementById('pf_desc').value.trim(),
+    seller: document.getElementById('pf_seller').value.trim(),
+    area: parseFloat(document.getElementById('pf_area').value)||0,
+    unit: document.getElementById('pf_unit').value,
+    amount: parseFloat(document.getElementById('pf_amt').value)||0,
+    status: document.getElementById('pf_status').value,
+    notes: document.getElementById('pf_notes').value.trim()
+  };
+  if(editPurchaseId){ const idx=purchases.findIndex(x=>x.id===editPurchaseId); purchases[idx]=entry; }
+  else purchases.push(entry);
+  DB.set('purchases',purchases);
+  purchaseForm=false; editPurchaseId=null;
+  document.getElementById('adminMain').innerHTML=renderReports();
+}
+
+function deletePurchase(id){ if(confirm('Delete this purchase?')){ const p=DB.get('purchases')||[]; DB.set('purchases',p.filter(x=>x.id!==id)); document.getElementById('adminMain').innerHTML=renderReports(); } }
+
+/* ── INVENTORY REPORT ── */
+function renderInventoryReport(){
+  const inv = DB.get('inventory')||[];
+  const totalCost = inv.reduce((s,i)=>s+i.purchaseValue,0);
+  const totalMktVal = inv.reduce((s,i)=>s+i.currentValue,0);
+  const available = inv.filter(i=>i.status==='Available');
+  const cards = '<div class="stats-grid" style="margin-bottom:20px;">'
+    + statCard('📦','Total Properties',inv.length,'#0284C7')
+    + statCard('💰','Purchase Value',inr(totalCost),'#DC2626')
+    + statCard('📈','Market Value',inr(totalMktVal),'#16A34A')
+    + statCard('✅','Available',available.length,'#7C3AED')
+    + '</div>';
+  const addBtn = '<button class="btn btn-blue btn-sm" style="margin-bottom:14px;" onclick="inventoryForm=true;editInventoryId=null;document.getElementById(\'adminMain\').innerHTML=renderReports();">+ Add Property</button>';
+  let formHtml = '';
+  if(inventoryForm) formHtml = renderInventoryForm();
+  const rows = inv.map(i=>{
+    const gain = i.currentValue - i.purchaseValue;
+    const gainPct = ((gain/i.purchaseValue)*100).toFixed(1);
+    return '<tr><td><b>'+i.plotNo+'</b></td><td><span style="background:#EFF6FF;color:#0284C7;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;">'+i.type+'</span></td><td>'+i.location+'</td><td>'+i.area+' '+i.unit+'</td><td>'+inr(i.purchaseValue)+'</td><td>'+inr(i.currentValue)+'</td><td style="color:'+(gain>=0?'#16A34A':'#DC2626')+';font-weight:700;">'+(gain>=0?'+':'')+inr(gain)+' ('+gainPct+'%)</td><td><span class="status-badge '+(i.status==='Available'?'badge-green':i.status==='Reserved'?'badge-yellow':'badge-red')+'">'+i.status+'</span></td><td><button class="btn btn-out btn-sm" onclick="editInventoryId='+i.id+';inventoryForm=true;document.getElementById(\'adminMain\').innerHTML=renderReports();">✎</button> <button class="btn btn-red" onclick="deleteInventory('+i.id+')">✕</button></td></tr>';
+  }).join('');
+  const tbl = '<div style="overflow-x:auto;"><table class="tbl" style="min-width:900px;"><thead><tr><th>Plot/No</th><th>Type</th><th>Location</th><th>Area</th><th>Purchase Value</th><th>Market Value</th><th>Gain/Loss</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+rows+(rows?'':'<tr><td colspan="9" style="text-align:center;color:#94A3B8;padding:40px;">No inventory yet.</td></tr>')+'</tbody></table></div>';
+  return cards + addBtn + (formHtml?formHtml+'<br/>':'') + reportCard('Property Inventory', tbl);
+}
+
+function renderInventoryForm(){
+  const inv = DB.get('inventory')||[];
+  const it = editInventoryId ? inv.find(x=>x.id===editInventoryId) : null;
+  return '<div class="card" style="border-top:3px solid #0284C7;margin-bottom:14px;max-width:620px;">'
+    +'<div style="font-size:16px;font-weight:800;color:#1E3A8A;margin-bottom:16px;">'+(editInventoryId?'Edit Property':'Add Property')+'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+    +'<div><label class="lbl">Plot/Property No.</label><input class="inp" id="if_plot" value="'+(it?it.plotNo:'')+'"/></div>'
+    +'<div><label class="lbl">Type</label><select class="inp" id="if_type"><option '+(it&&it.type==='Residential Plot'?'selected':'')+' value="Residential Plot">Residential Plot</option><option '+(it&&it.type==='Commercial Plot'?'selected':'')+' value="Commercial Plot">Commercial Plot</option><option '+(it&&it.type==='Agricultural Land'?'selected':'')+' value="Agricultural Land">Agricultural Land</option><option '+(it&&it.type==='Building'?'selected':'')+' value="Building">Building</option><option '+(it&&it.type==='Flat'?'selected':'')+' value="Flat">Flat</option><option '+(it&&it.type==='Villa'?'selected':'')+' value="Villa">Villa</option></select></div>'
+    +'<div style="grid-column:1/-1"><label class="lbl">Location</label><input class="inp" id="if_loc" value="'+(it?it.location:'')+'"/></div>'
+    +'<div><label class="lbl">Area</label><input class="inp" id="if_area" type="number" value="'+(it?it.area:'')+'"/></div>'
+    +'<div><label class="lbl">Unit</label><select class="inp" id="if_unit"><option '+(it&&it.unit==='sqft'?'selected':'')+' value="sqft">Sq. Feet</option><option '+(it&&it.unit==='acres'?'selected':'')+' value="acres">Acres</option><option '+(it&&it.unit==='cent'?'selected':'')+' value="cent">Cent</option></select></div>'
+    +'<div><label class="lbl">Purchase Value (₹)</label><input class="inp" id="if_pval" type="number" value="'+(it?it.purchaseValue:'')+'"/></div>'
+    +'<div><label class="lbl">Current Market Value (₹)</label><input class="inp" id="if_cval" type="number" value="'+(it?it.currentValue:'')+'"/></div>'
+    +'<div><label class="lbl">Status</label><select class="inp" id="if_status"><option '+(it&&it.status==='Available'?'selected':'')+' value="Available">Available</option><option '+(it&&it.status==='Reserved'?'selected':'')+' value="Reserved">Reserved</option><option '+(it&&it.status==='Sold'?'selected':'')+' value="Sold">Sold</option></select></div>'
+    +'</div>'
+    +'<div style="display:flex;gap:10px;margin-top:14px;">'
+    +'<button class="btn btn-blue" onclick="saveInventory()">💾 Save</button>'
+    +'<button class="btn btn-out" onclick="inventoryForm=false;editInventoryId=null;document.getElementById(\'adminMain\').innerHTML=renderReports();">Cancel</button>'
+    +'</div></div>';
+}
+
+function saveInventory(){
+  const inv = DB.get('inventory')||[];
+  const entry = {
+    id: editInventoryId||Date.now(),
+    plotNo: document.getElementById('if_plot').value.trim(),
+    type: document.getElementById('if_type').value,
+    location: document.getElementById('if_loc').value.trim(),
+    area: parseFloat(document.getElementById('if_area').value)||0,
+    unit: document.getElementById('if_unit').value,
+    purchaseValue: parseFloat(document.getElementById('if_pval').value)||0,
+    currentValue: parseFloat(document.getElementById('if_cval').value)||0,
+    status: document.getElementById('if_status').value
+  };
+  if(editInventoryId){ const idx=inv.findIndex(x=>x.id===editInventoryId); inv[idx]=entry; }
+  else inv.push(entry);
+  DB.set('inventory',inv);
+  inventoryForm=false; editInventoryId=null;
+  document.getElementById('adminMain').innerHTML=renderReports();
+}
+
+function deleteInventory(id){ if(confirm('Delete this property?')){ const inv=DB.get('inventory')||[]; DB.set('inventory',inv.filter(x=>x.id!==id)); document.getElementById('adminMain').innerHTML=renderReports(); } }
+
+/* ── BALANCE SHEET (Banking Style) ── */
+function renderBalanceSheet(){
+  const customers = DB.get('customers')||[];
+  const purchases = DB.get('purchases')||[];
+  const sales = DB.get('sales')||[];
+  const inv = DB.get('inventory')||[];
+  const investments = DB.get('investments')||[];
+  const charges = DB.get('charges')||[];
+  const cf = DB.get('cashflow')||[];
+
+  // Assets
+  const cashIn = cf.filter(c=>c.type==='Cash In').reduce((s,c)=>s+c.amount,0);
+  const cashOut = cf.filter(c=>c.type==='Cash Out').reduce((s,c)=>s+c.amount,0);
+  const cashInHand = cashIn - cashOut;
+  const bankIn = cf.filter(c=>c.type==='Bank Receipt').reduce((s,c)=>s+c.amount,0);
+  const bankOut = cf.filter(c=>c.type==='Bank Payment').reduce((s,c)=>s+c.amount,0);
+  const bankBalance = bankIn - bankOut;
+  const inventoryMktVal = inv.reduce((s,i)=>s+i.currentValue,0);
+  const extPortfolio = investments.reduce((s,i)=>s+i.currentValue,0);
+  const saleReceivable = sales.filter(s=>s.status==='Pending').reduce((s,sl)=>s+sl.total,0);
+  const totalAssets = cashInHand + bankBalance + inventoryMktVal + extPortfolio + saleReceivable;
+
+  // Liabilities
+  const custPrincipal = customers.reduce((s,c)=>s+(c.investmentAmount||0),0);
+  const estimatedInterest = customers.reduce((s,c)=>s+((c.investmentAmount||0)*(c.profitRatio||0)/100),0);
+  const purchasePending = purchases.filter(p=>p.status==='Pending').reduce((s,p)=>s+p.amount,0);
+  const chargesPending = charges.filter(c=>c.status==='Pending').reduce((s,c)=>s+c.amount,0);
+  const totalLiabilities = custPrincipal + estimatedInterest + purchasePending + chargesPending;
+  const netWorth = totalAssets - totalLiabilities;
+
+  const bsSectionHdr = (title,color)=>'<tr style="background:'+color+';"><td colspan="2" style="padding:10px 14px;font-size:12px;font-weight:800;color:#fff;letter-spacing:1px;">'+title+'</td></tr>';
+  const bsRow2 = (label,amount,indent,bold)=>'<tr style="border-bottom:1px solid #EFF6FF;'+(bold?'background:#F8FAFC;':'')+'"><td style="padding:'+(bold?'12':'9')+'px '+(indent?'28':'14')+'px;font-size:'+(bold?'14':'13')+'px;font-weight:'+(bold?'700':'500')+';color:'+(bold?'#1E293B':'#475569')+';">'+label+'</td><td style="padding:9px 14px;text-align:right;font-size:'+(bold?'15':'13')+'px;font-weight:'+(bold?'800':'600')+';">'+inr(amount)+'</td></tr>';
+  const bsTotal = (label,amount,color)=>'<tr style="background:'+color+'22;border-top:2px solid '+color+';"><td style="padding:12px 14px;font-size:14px;font-weight:800;color:'+color+';">'+label+'</td><td style="padding:12px 14px;text-align:right;font-size:17px;font-weight:800;color:'+color+';">'+inr(amount)+'</td></tr>';
+
+  const assetsTable = '<div style="overflow-x:auto;flex:1;"><div class="card" style="border-top:3px solid #16A34A;padding:0;overflow:hidden;min-width:280px;">'
+    +'<table style="width:100%;border-collapse:collapse;">'
+    + bsSectionHdr('ASSETS','#16A34A')
+    + bsSectionHdr('A. CASH AND BANK','#0284C7')
+    + bsRow2('Cash in Hand',cashInHand,true,false)
+    + bsRow2('Bank Balance',bankBalance,true,false)
+    + bsTotal('Total Cash & Bank',cashInHand+bankBalance,'#0284C7')
+    + bsSectionHdr('B. INVESTMENTS & PROPERTY','#7C3AED')
+    + bsRow2('Property Inventory (Market Value)',inventoryMktVal,true,false)
+    + bsRow2('External Investment Portfolio',extPortfolio,true,false)
+    + bsTotal('Total Investments',inventoryMktVal+extPortfolio,'#7C3AED')
+    + bsSectionHdr('C. RECEIVABLES','#D97706')
+    + bsRow2('Pending Sale Receivables',saleReceivable,true,false)
+    + bsTotal('Total Receivables',saleReceivable,'#D97706')
+    + bsTotal('TOTAL ASSETS',totalAssets,'#16A34A')
+    +'</table></div></div>';
+
+  const liabTable = '<div style="overflow-x:auto;flex:1;"><div class="card" style="border-top:3px solid #DC2626;padding:0;overflow:hidden;min-width:280px;">'
+    +'<table style="width:100%;border-collapse:collapse;">'
+    + bsSectionHdr('LIABILITIES','#DC2626')
+    + bsSectionHdr('A. CAPITAL & RESERVES','#7C3AED')
+    + bsRow2('Customer Investment (Principal)',custPrincipal,true,false)
+    + bsTotal('Total Capital',custPrincipal,'#7C3AED')
+    + bsSectionHdr('B. CURRENT LIABILITIES','#D97706')
+    + bsRow2('Profit/Interest Payable to Customers',estimatedInterest,true,false)
+    + bsRow2('Pending Purchase Payments',purchasePending,true,false)
+    + bsRow2('Pending Charges Payable',chargesPending,true,false)
+    + bsTotal('Total Current Liabilities',estimatedInterest+purchasePending+chargesPending,'#D97706')
+    + bsTotal('TOTAL LIABILITIES',totalLiabilities,'#DC2626')
+    +'</table></div></div>';
+
+  const verify = totalAssets === totalLiabilities + netWorth;
+  const netWorthCard = '<div class="card" style="background:linear-gradient(135deg,#1E3A8A,#2563EB);border:none;margin-top:16px;">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">'
+    +'<div><div style="font-size:13px;font-weight:700;color:#93C5FD;letter-spacing:1px;">NET WORTH / EQUITY</div>'
+    +'<div style="font-size:11px;color:#BFDBFE;margin-top:4px;">Total Assets ('+inr(totalAssets)+') − Total Liabilities ('+inr(totalLiabilities)+')</div></div>'
+    +'<div style="font-size:30px;font-weight:800;color:'+(netWorth>=0?'#4ADE80':'#FCA5A5')+';">'+inr(netWorth)+'</div></div>'
+    +'<div style="margin-top:14px;display:flex;gap:16px;flex-wrap:wrap;">'
+    +'<div style="background:rgba(255,255,255,.1);border-radius:10px;padding:10px 16px;flex:1;text-align:center;"><div style="font-size:11px;color:#93C5FD;font-weight:700;">ASSETS</div><div style="font-size:18px;font-weight:800;color:#fff;">'+inr(totalAssets)+'</div></div>'
+    +'<div style="background:rgba(255,255,255,.1);border-radius:10px;padding:10px 16px;flex:1;text-align:center;"><div style="font-size:11px;color:#FCA5A5;font-weight:700;">LIABILITIES</div><div style="font-size:18px;font-weight:800;color:#fff;">'+inr(totalLiabilities)+'</div></div>'
+    +'<div style="background:'+(verify?'rgba(74,222,128,.15)':'rgba(252,165,165,.15)')+';border-radius:10px;padding:10px 16px;flex:1;text-align:center;"><div style="font-size:11px;color:#93C5FD;font-weight:700;">BALANCE CHECK</div><div style="font-size:15px;font-weight:800;color:'+(verify?'#4ADE80':'#FCA5A5')+'">'+(verify?'✅ Tallied':'⚠️ Difference: '+inr(Math.abs(totalAssets-totalLiabilities-netWorth)))+'</div></div>'
+    +'</div></div>';
+
+  return '<div style="display:flex;gap:16px;flex-wrap:wrap;">' + assetsTable + liabTable + '</div>' + netWorthCard;
+}
+
+/* ── P&L REPORT (Banking Style) ── */
+function renderPLReport(){
+  const customers = DB.get('customers')||[];
+  const purchases = DB.get('purchases')||[];
+  const sales = DB.get('sales')||[];
+  const investments = DB.get('investments')||[];
+  const inv = DB.get('inventory')||[];
+  const charges = DB.get('charges')||[];
+
+  // INCOME
+  const saleRevenue = sales.filter(s=>s.status==='Completed').reduce((s,sl)=>s+sl.total,0);
+  const invGain = investments.reduce((s,i)=>s+(i.currentValue-i.investedAmount),0);
+  const invAppreciation = inv.reduce((s,i)=>s+(i.currentValue-i.purchaseValue),0);
+  const interestEarnable = customers.reduce((s,c)=>s+((c.investmentAmount||0)*(c.profitRatio||0)/100),0);
+  const totalIncome = saleRevenue + invGain + invAppreciation;
+
+  // EXPENSES
+  const purchaseCost = purchases.filter(p=>p.status==='Completed').reduce((s,p)=>s+p.amount,0);
+  const interestPayable = interestEarnable;
+  const chargesTotal = charges.filter(c=>c.status==='Paid').reduce((s,c)=>s+c.amount,0);
+  const chargesByType = {};
+  charges.filter(c=>c.status==='Paid').forEach(c=>{ chargesByType[c.type]=(chargesByType[c.type]||0)+c.amount; });
+  const totalExpenses = purchaseCost + interestPayable + chargesTotal;
+  const grossProfit = saleRevenue - purchaseCost;
+  const netPL = totalIncome - totalExpenses;
+
+  const plSec = (title,color)=>'<tr style="background:'+color+';"><td colspan="2" style="padding:10px 14px;font-size:12px;font-weight:800;color:#fff;letter-spacing:1px;">'+title+'</td></tr>';
+  const plRow2 = (label,val,indent,bold)=>'<tr style="border-bottom:1px solid #EFF6FF;"><td style="padding:'+(bold?'12':'9')+'px '+(indent?'28':'14')+'px;font-size:'+(bold?'14':'13')+'px;font-weight:'+(bold?'700':'400')+';color:'+(bold?'#1E293B':'#475569')+';">'+label+'</td><td style="padding:9px 14px;text-align:right;font-size:'+(bold?'15':'13')+'px;font-weight:'+(bold?'800':'500')+';color:'+(val>=0?'#16A34A':'#DC2626')+';">'+(val>=0?'+':'')+inr(val)+'</td></tr>';
+  const plTotal = (label,val,color)=>'<tr style="background:'+color+'22;border-top:2px solid '+color+';"><td style="padding:12px 14px;font-size:14px;font-weight:800;color:'+color+';">'+label+'</td><td style="padding:12px 14px;text-align:right;font-size:17px;font-weight:800;color:'+color+';">'+(val>=0?'+':'')+inr(val)+'</td></tr>';
+
+  const incomeTable = '<div style="overflow-x:auto;flex:1;"><div class="card" style="border-top:3px solid #16A34A;padding:0;overflow:hidden;min-width:280px;">'
+    +'<table style="width:100%;border-collapse:collapse;">'
+    + plSec('INCOME','#16A34A')
+    + plSec('A. TRADING INCOME','#0284C7')
+    + plRow2('Plot / Property Sales Revenue',saleRevenue,true,false)
+    + plTotal('Gross Trading Income',saleRevenue,'#0284C7')
+    + plSec('B. INVESTMENT INCOME','#7C3AED')
+    + plRow2('External Portfolio Gain',invGain,true,false)
+    + plRow2('Property Appreciation',invAppreciation,true,false)
+    + plTotal('Total Investment Income',invGain+invAppreciation,'#7C3AED')
+    + plTotal('TOTAL INCOME',totalIncome,'#16A34A')
+    +'</table></div></div>';
+
+  const expenseTable = '<div style="overflow-x:auto;flex:1;"><div class="card" style="border-top:3px solid #DC2626;padding:0;overflow:hidden;min-width:280px;">'
+    +'<table style="width:100%;border-collapse:collapse;">'
+    + plSec('EXPENSES','#DC2626')
+    + plSec('A. COST OF PURCHASES','#D97706')
+    + plRow2('Property / Land Purchase Cost',purchaseCost,true,false)
+    + plTotal('Total Purchase Cost',purchaseCost,'#D97706')
+    + plSec('B. FINANCIAL EXPENSES','#DC2626')
+    + plRow2('Interest / Profit Payable to Investors',interestPayable,true,false)
+    + plTotal('Total Financial Expenses',interestPayable,'#DC2626')
+    + plSec('C. OPERATIONAL CHARGES','#7C3AED')
+    + Object.entries(chargesByType).map(([type,amt])=>plRow2(type,amt,true,false)).join('')
+    + plTotal('Total Charges',chargesTotal,'#7C3AED')
+    + plTotal('TOTAL EXPENSES',totalExpenses,'#DC2626')
+    +'</table></div></div>';
+
+  const summaryCard = '<div class="card" style="border-top:3px solid '+(netPL>=0?'#16A34A':'#DC2626')+';margin-top:16px;">'
+    +'<div style="font-size:14px;font-weight:800;color:#1E3A8A;margin-bottom:12px;">📋 P&L SUMMARY</div>'
+    +'<table style="width:100%;border-collapse:collapse;">'
+    + plSec('PROFIT & LOSS ACCOUNT','#1E3A8A')
+    + plRow2('Gross Profit (Sales − Purchase Cost)',grossProfit,false,true)
+    + plRow2('Total Income',totalIncome,false,false)
+    + plRow2('Total Expenses',totalExpenses*-1,false,false)
+    + plRow2('Net Profit / (Loss)',netPL,false,true)
+    +'</table>'
+    +'<div style="background:linear-gradient(135deg,'+(netPL>=0?'#16A34A':'#DC2626')+','+(netPL>=0?'#15803D':'#B91C1C')+');border-radius:12px;padding:16px 20px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;">'
+    +'<div><div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:1px;">NET '+(netPL>=0?'PROFIT':'LOSS')+'</div><div style="font-size:11px;color:rgba(255,255,255,.5);">Current Period</div></div>'
+    +'<div style="font-size:28px;font-weight:800;color:#fff;">'+inr(Math.abs(netPL))+'</div>'
+    +'</div></div>';
+
+  return '<div style="display:flex;gap:16px;flex-wrap:wrap;">' + incomeTable + expenseTable + '</div>' + summaryCard;
+}
+
+/* ── HELPERS ── */
+function statCard(icon,label,value,color){
+  return '<div class="stat-card" style="border-top:3px solid '+color+';">'
+    +'<div class="stat-icon" style="background:'+color+'22;">'+icon+'</div>'
+    +'<div class="stat-val" style="color:'+color+';">'+value+'</div>'
+    +'<div class="stat-lbl">'+label+'</div></div>';
+}
+function reportCard(title, content){
+  return '<div class="card" style="margin-top:4px;">'
+    +'<div style="font-size:14px;font-weight:800;color:#1E3A8A;margin-bottom:12px;">'+title+'</div>'
+    + content + '</div>';
+}
+function formatDate(d){ if(!d) return '—'; try{ return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }catch(e){ return d; } }
+
+// ════════════════════════════════════════════════════════
+// CHARGES REPORT
+// ════════════════════════════════════════════════════════
+let chargeForm=false, editChargeId=null;
+function renderChargesReport(){
+  const charges = DB.get('charges')||[];
+  const totalCharges = charges.reduce((s,c)=>s+c.amount,0);
+  const paid = charges.filter(c=>c.status==='Paid');
+  const pending = charges.filter(c=>c.status==='Pending');
+  const byType = {};
+  charges.forEach(c=>{ byType[c.type]=(byType[c.type]||0)+c.amount; });
+
+  const cards = '<div class="stats-grid" style="margin-bottom:20px;">'
+    + statCard('🧾','Total Charges',charges.length,'#7C3AED')
+    + statCard('💸','Total Amount',inr(totalCharges),'#DC2626')
+    + statCard('✅','Paid',inr(paid.reduce((s,c)=>s+c.amount,0)),'#16A34A')
+    + statCard('⏳','Pending',inr(pending.reduce((s,c)=>s+c.amount,0)),'#D97706')
+    + '</div>';
+
+  const typeBreakdown = '<div class="card" style="margin-bottom:16px;border-top:3px solid #7C3AED;">'
+    +'<div style="font-size:13px;font-weight:800;color:#1E3A8A;margin-bottom:12px;">Charges Breakdown by Type</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;">'
+    + Object.entries(byType).map(([type,amt])=>'<div style="background:#F5F3FF;border-radius:10px;padding:12px;border-left:4px solid #7C3AED;"><div style="font-size:11px;font-weight:700;color:#7C3AED;">'+type.toUpperCase()+'</div><div style="font-size:18px;font-weight:800;color:#1E293B;margin-top:4px;">'+inr(amt)+'</div></div>').join('')
+    +'</div></div>';
+
+  const addBtn = '<button class="btn btn-blue btn-sm" style="margin-bottom:14px;" onclick="chargeForm=true;editChargeId=null;document.getElementById(\'adminMain\').innerHTML=renderReports();">+ Add Charge</button>';
+  let formHtml = chargeForm ? renderChargeForm() : '';
+
+  const rows = charges.map(c=>'<tr><td>'+formatDate(c.date)+'</td><td><span style="background:#EDE9FE;color:#7C3AED;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;">'+c.type+'</span></td><td>'+c.description+'</td><td>'+c.paidTo+'</td><td>'+c.plotRef+'</td><td style="color:#DC2626;font-weight:700;">'+inr(c.amount)+'</td><td><span class="status-badge '+(c.status==='Paid'?'badge-green':'badge-yellow')+'">'+c.status+'</span></td><td><button class="btn btn-out btn-sm" onclick="editChargeId='+c.id+';chargeForm=true;document.getElementById(\'adminMain\').innerHTML=renderReports();">✎</button> <button class="btn btn-red" onclick="deleteCharge('+c.id+')">✕</button></td></tr>').join('');
+  const tbl = '<div style="overflow-x:auto;"><table class="tbl" style="min-width:700px;"><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Paid To</th><th>Plot Ref</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody>'+rows+(rows?'':'<tr><td colspan="8" style="text-align:center;color:#94A3B8;padding:40px;">No charges yet.</td></tr>')+'</tbody></table></div>';
+  return cards + typeBreakdown + addBtn + (formHtml?formHtml+'<br/>':'') + reportCard('All Charges', tbl);
+}
+
+function renderChargeForm(){
+  const charges = DB.get('charges')||[];
+  const ch = editChargeId ? charges.find(x=>x.id===editChargeId) : null;
+  const chargeTypes = ['Writer Charges','Registration Charges','Maintenance Charges','Legal Charges','Survey Charges','Stamp Duty','Brokerage','Other'];
+  return '<div class="card" style="border-top:3px solid #7C3AED;margin-bottom:14px;max-width:620px;">'
+    +'<div style="font-size:16px;font-weight:800;color:#1E3A8A;margin-bottom:16px;">'+(editChargeId?'Edit Charge':'Add New Charge')+'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+    +'<div><label class="lbl">Date</label><input class="inp" id="chf_date" type="date" value="'+(ch?ch.date:'')+'"/></div>'
+    +'<div><label class="lbl">Charge Type</label><select class="inp" id="chf_type">'
+    + chargeTypes.map(t=>'<option '+(ch&&ch.type===t?'selected':'')+' value="'+t+'">'+t+'</option>').join('')
+    +'</select></div>'
+    +'<div style="grid-column:1/-1"><label class="lbl">Description</label><input class="inp" id="chf_desc" value="'+(ch?ch.description:'')+'"/></div>'
+    +'<div><label class="lbl">Paid To</label><input class="inp" id="chf_paidto" value="'+(ch?ch.paidTo:'')+'"/></div>'
+    +'<div><label class="lbl">Amount (₹)</label><input class="inp" id="chf_amt" type="number" value="'+(ch?ch.amount:'')+'"/></div>'
+    +'<div><label class="lbl">Plot / Property Ref</label><input class="inp" id="chf_plot" value="'+(ch?ch.plotRef:'')+'"/></div>'
+    +'<div><label class="lbl">Status</label><select class="inp" id="chf_status"><option '+(ch&&ch.status==='Paid'?'selected':'')+' value="Paid">Paid</option><option '+(ch&&ch.status==='Pending'?'selected':'')+' value="Pending">Pending</option></select></div>'
+    +'</div>'
+    +'<div style="display:flex;gap:10px;margin-top:14px;">'
+    +'<button class="btn btn-blue" onclick="saveCharge()">💾 Save</button>'
+    +'<button class="btn btn-out" onclick="chargeForm=false;editChargeId=null;document.getElementById(\'adminMain\').innerHTML=renderReports();">Cancel</button>'
+    +'</div></div>';
+}
+
+function saveCharge(){
+  const charges = DB.get('charges')||[];
+  const entry = {
+    id: editChargeId||Date.now(),
+    date: document.getElementById('chf_date').value,
+    type: document.getElementById('chf_type').value,
+    description: document.getElementById('chf_desc').value.trim(),
+    paidTo: document.getElementById('chf_paidto').value.trim(),
+    amount: parseFloat(document.getElementById('chf_amt').value)||0,
+    plotRef: document.getElementById('chf_plot').value.trim(),
+    status: document.getElementById('chf_status').value
+  };
+  if(editChargeId){ const idx=charges.findIndex(x=>x.id===editChargeId); charges[idx]=entry; }
+  else charges.push(entry);
+  DB.set('charges',charges);
+  chargeForm=false; editChargeId=null;
+  document.getElementById('adminMain').innerHTML=renderReports();
+}
+function deleteCharge(id){ if(confirm('Delete this charge?')){ DB.set('charges',(DB.get('charges')||[]).filter(x=>x.id!==id)); document.getElementById('adminMain').innerHTML=renderReports(); } }
+
+// ════════════════════════════════════════════════════════
+// CASH FLOW
+// ════════════════════════════════════════════════════════
+let cashForm=false, editCashId=null;
+const DENOMS = [2000,500,200,100,50,20,10,5,2,1];
+
+function renderCashFlow(){
+  const cf = DB.get('cashflow')||[];
+  const cashIn = cf.filter(c=>c.type==='Cash In').reduce((s,c)=>s+c.amount,0);
+  const cashOut = cf.filter(c=>c.type==='Cash Out').reduce((s,c)=>s+c.amount,0);
+  const bankIn = cf.filter(c=>c.type==='Bank Receipt').reduce((s,c)=>s+c.amount,0);
+  const bankOut = cf.filter(c=>c.type==='Bank Payment').reduce((s,c)=>s+c.amount,0);
+  const netCash = cashIn - cashOut;
+  const netBank = bankIn - bankOut;
+
+  // Denomination totals from all cash-in entries
+  const denomTotals = {};
+  DENOMS.forEach(d=>{ denomTotals[d]=0; });
+  cf.filter(c=>c.type==='Cash In'&&c.denomination).forEach(c=>{
+    DENOMS.forEach(d=>{ denomTotals[d]+=(c.denomination[d]||0); });
+  });
+  const totalCashInHand = DENOMS.reduce((s,d)=>s+(denomTotals[d]*d),0);
+
+  const summary = '<div class="stats-grid" style="margin-bottom:20px;">'
+    + statCard('💵','Cash In Hand',inr(netCash),'#16A34A')
+    + statCard('🏦','Bank Balance (Net)',inr(netBank),'#1D4ED8')
+    + statCard('📥','Total Cash In',inr(cashIn),'#16A34A')
+    + statCard('📤','Total Cash Out',inr(cashOut),'#DC2626')
+    + '</div>';
+
+  // Denomination table
+  const denomTable = '<div class="card" style="border-top:3px solid #16A34A;margin-bottom:16px;max-width:480px;">'
+    +'<div style="font-size:13px;font-weight:800;color:#1E3A8A;margin-bottom:12px;">💵 Cash In Hand — Denomination Breakdown</div>'
+    +'<table class="tbl"><thead><tr><th>Denomination</th><th>Count</th><th>Value</th></tr></thead><tbody>'
+    + DENOMS.map(d=>'<tr><td>₹'+d+'</td><td style="text-align:center;">'+denomTotals[d]+'</td><td style="color:#16A34A;font-weight:700;">'+inr(denomTotals[d]*d)+'</td></tr>').join('')
+    +'<tr style="background:#DCFCE7;font-weight:800;"><td colspan="2">TOTAL CASH IN HAND</td><td style="color:#16A34A;font-size:15px;">'+inr(netCash)+'</td></tr>'
+    +'</tbody></table></div>';
+
+  // Bank-wise summary
+  const banks = {};
+  cf.filter(c=>c.bank).forEach(c=>{
+    if(!banks[c.bank]) banks[c.bank]={in:0,out:0};
+    if(c.type==='Bank Receipt') banks[c.bank].in+=c.amount;
+    if(c.type==='Bank Payment') banks[c.bank].out+=c.amount;
+  });
+  const bankTable = Object.keys(banks).length>0 ? '<div class="card" style="border-top:3px solid #1D4ED8;margin-bottom:16px;">'
+    +'<div style="font-size:13px;font-weight:800;color:#1E3A8A;margin-bottom:12px;">🏦 Bank-wise Summary</div>'
+    +'<table class="tbl"><thead><tr><th>Bank</th><th>Receipts</th><th>Payments</th><th>Balance</th></tr></thead><tbody>'
+    + Object.entries(banks).map(([bank,v])=>'<tr><td><b>'+bank+'</b></td><td style="color:#16A34A;font-weight:700;">'+inr(v.in)+'</td><td style="color:#DC2626;font-weight:700;">'+inr(v.out)+'</td><td style="color:'+(v.in-v.out>=0?'#1D4ED8':'#DC2626')+';font-weight:800;">'+inr(v.in-v.out)+'</td></tr>').join('')
+    +'</tbody></table></div>' : '';
+
+  const addBtn = '<button class="btn btn-blue btn-sm" style="margin-bottom:14px;" onclick="cashForm=true;editCashId=null;document.getElementById(\'adminMain\').innerHTML=renderCashFlow();">+ Add Entry</button>';
+  let formHtml = cashForm ? renderCashForm() : '';
+
+  const rows = cf.map(c=>'<tr><td>'+formatDate(c.date)+'</td><td><span style="background:'+(c.type==='Cash In'||c.type==='Bank Receipt'?'#DCFCE7':'#FEE2E2')+';color:'+(c.type==='Cash In'||c.type==='Bank Receipt'?'#16A34A':'#DC2626')+';padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;">'+c.type+'</span></td><td>'+c.subtype+'</td><td>'+c.description+'</td><td>'+(c.bank||'Cash')+'</td><td style="color:'+(c.type==='Cash In'||c.type==='Bank Receipt'?'#16A34A':'#DC2626')+';font-weight:700;">'+(c.type==='Cash In'||c.type==='Bank Receipt'?'+':'-')+inr(c.amount)+'</td><td><button class="btn btn-out btn-sm" onclick="editCashId='+c.id+';cashForm=true;document.getElementById(\'adminMain\').innerHTML=renderCashFlow();">✎</button> <button class="btn btn-red" onclick="deleteCash('+c.id+')">✕</button></td></tr>').join('');
+  const tbl = '<div style="overflow-x:auto;"><table class="tbl" style="min-width:680px;"><thead><tr><th>Date</th><th>Type</th><th>Sub-Type</th><th>Description</th><th>Bank/Cash</th><th>Amount</th><th>Actions</th></tr></thead><tbody>'+rows+(rows?'':'<tr><td colspan="7" style="text-align:center;color:#94A3B8;padding:40px;">No entries yet.</td></tr>')+'</tbody></table></div>';
+
+  return '<h1 style="font-size:22px;font-weight:800;color:#1E3A8A;margin-bottom:16px;">💵 Cash Flow</h1>'
+    + summary + denomTable + bankTable
+    + addBtn + (formHtml?formHtml+'<br/>':'')
+    + '<div class="card" style="margin-top:4px;"><div style="font-size:14px;font-weight:800;color:#1E3A8A;margin-bottom:12px;">Cash Flow Transactions</div>'+tbl+'</div>';
+}
+
+function renderCashForm(){
+  const cf = DB.get('cashflow')||[];
+  const c = editCashId ? cf.find(x=>x.id===editCashId) : null;
+  const isIncoming = !c || c.type==='Cash In' || c.type==='Bank Receipt';
+  const subtypes = ['Customer Investment','Plot Sale','Loan Receipt','Interest Received','Other Income','Purchase Payment','Charge Payment','Salary Payment','Maintenance','Other Expense'];
+  let denomHtml = DENOMS.map(d=>'<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #EFF6FF;">'
+    +'<span style="width:60px;font-weight:700;color:#1E3A8A;">₹'+d+'</span>'
+    +'<span style="color:#64748B;font-size:12px;">×</span>'
+    +'<input class="inp" id="den_'+d+'" type="number" min="0" value="'+(c&&c.denomination?c.denomination[d]||0:0)+'" style="width:80px;padding:6px;" onchange="updateDenomTotal()"/>'
+    +'<span style="color:#16A34A;font-weight:700;font-size:13px;" id="dval_'+d+'">= '+inr((c&&c.denomination?c.denomination[d]||0:0)*d)+'</span>'
+    +'</div>').join('');
+
+  return '<div class="card" style="border-top:3px solid #16A34A;margin-bottom:14px;max-width:640px;">'
+    +'<div style="font-size:16px;font-weight:800;color:#1E3A8A;margin-bottom:16px;">'+(editCashId?'Edit Entry':'New Cash Flow Entry')+'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">'
+    +'<div><label class="lbl">Date</label><input class="inp" id="cf_date" type="date" value="'+(c?c.date:'')+'"/></div>'
+    +'<div><label class="lbl">Type</label><select class="inp" id="cf_type" onchange="toggleCfBank()">'
+    +'<option '+(c&&c.type==="Cash In"?'selected':'')+' value="Cash In">Cash In</option>'
+    +'<option '+(c&&c.type==="Cash Out"?'selected':'')+' value="Cash Out">Cash Out</option>'
+    +'<option '+(c&&c.type==="Bank Receipt"?'selected':'')+' value="Bank Receipt">Bank Receipt</option>'
+    +'<option '+(c&&c.type==="Bank Payment"?'selected':'')+' value="Bank Payment">Bank Payment</option>'
+    +'</select></div>'
+    +'<div><label class="lbl">Sub-Type</label><select class="inp" id="cf_sub">'
+    +subtypes.map(s=>'<option '+(c&&c.subtype===s?'selected':'')+' value="'+s+'">'+s+'</option>').join('')
+    +'</select></div>'
+    +'<div><label class="lbl">Amount (₹)</label><input class="inp" id="cf_amt" type="number" value="'+(c?c.amount:'')+'" onchange="updateDenomTotal()"/></div>'
+    +'<div style="grid-column:1/-1"><label class="lbl">Description</label><input class="inp" id="cf_desc" value="'+(c?c.description:'')+'"/></div>'
+    +'<div id="cf_bank_wrap" style="grid-column:1/-1;'+(c&&(c.type==='Bank Receipt'||c.type==='Bank Payment')?'':'display:none;')+'"><label class="lbl">Bank Name</label><input class="inp" id="cf_bank" value="'+(c?c.bank:'')+'" placeholder="e.g. State Bank of India"/></div>'
+    +'</div>'
+    +'<div id="denom_section">'
+    +'<div id="denom_header" style="font-size:12px;font-weight:800;color:#16A34A;margin-bottom:8px;">💵 Cash In — Denomination Breakdown</div>'
+    + denomHtml
+    +'<div style="display:flex;justify-content:space-between;margin-top:10px;padding:10px;background:#DCFCE7;border-radius:10px;"><span style="font-weight:800;">Denomination Total</span><span style="font-weight:800;color:#16A34A;" id="denom_grand">'+(()=>{ let t=0; DENOMS.forEach(d=>{ t+=(c&&c.denomination?c.denomination[d]||0:0)*d; }); return inr(t); })()+'</span></div>'
+    +'</div>'
+    +'<div style="display:flex;gap:10px;margin-top:14px;">'
+    +'<button class="btn btn-blue" onclick="saveCashFlow()">💾 Save</button>'
+    +'<button class="btn btn-out" onclick="cashForm=false;editCashId=null;document.getElementById(\'adminMain\').innerHTML=renderCashFlow();">Cancel</button>'
+    +'</div></div>';
+}
+
+function toggleCfBank(){
+  const t = document.getElementById('cf_type').value;
+  const bw = document.getElementById('cf_bank_wrap');
+  const ds = document.getElementById('denom_section');
+  if(bw) bw.style.display = (t==='Bank Receipt'||t==='Bank Payment') ? '' : 'none';
+  if(ds) ds.style.display = (t==='Cash In'||t==='Cash Out') ? '' : 'none';
+  // update denomination header label
+  const dh = document.getElementById('denom_header');
+  if(dh) dh.textContent = '💵 ' + (t==='Cash Out'?'Cash Out':'Cash In') + ' — Denomination Breakdown';
+}
+
+function updateDenomTotal(){
+  let total = 0;
+  DENOMS.forEach(d=>{
+    const cnt = parseInt(document.getElementById('den_'+d)?.value)||0;
+    const val = cnt * d;
+    total += val;
+    const el = document.getElementById('dval_'+d);
+    if(el) el.textContent = '= '+inr(val);
+  });
+  const gt = document.getElementById('denom_grand');
+  if(gt) gt.textContent = inr(total);
+}
+
+function saveCashFlow(){
+  const cf = DB.get('cashflow')||[];
+  const type = document.getElementById('cf_type').value;
+  const denom = {};
+  if(type==='Cash In'||type==='Cash Out'){
+    DENOMS.forEach(d=>{ denom[d]=parseInt(document.getElementById('den_'+d)?.value)||0; });
+  }
+  const entry = {
+    id: editCashId||Date.now(),
+    date: document.getElementById('cf_date').value,
+    type: type,
+    subtype: document.getElementById('cf_sub').value,
+    description: document.getElementById('cf_desc').value.trim(),
+    amount: parseFloat(document.getElementById('cf_amt').value)||0,
+    bank: document.getElementById('cf_bank')?.value.trim()||'',
+    denomination: denom
+  };
+  if(editCashId){ const idx=cf.findIndex(x=>x.id===editCashId); cf[idx]=entry; }
+  else cf.push(entry);
+  DB.set('cashflow',cf);
+  cashForm=false; editCashId=null;
+  document.getElementById('adminMain').innerHTML=renderCashFlow();
+}
+function deleteCash(id){ if(confirm('Delete this entry?')){ DB.set('cashflow',(DB.get('cashflow')||[]).filter(x=>x.id!==id)); document.getElementById('adminMain').innerHTML=renderCashFlow(); } }
 
 // ════════════════════════════════════════════════════════
 // INIT
